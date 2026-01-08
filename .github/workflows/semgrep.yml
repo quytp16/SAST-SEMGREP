@@ -15,6 +15,7 @@ jobs:
       - name: Run Semgrep scan
         uses: semgrep/semgrep-action@v1
         with:
+          entryPoint: semgrep
           config: .semgrep_rule.yml
           args: >
             scan
