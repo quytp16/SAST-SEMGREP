@@ -1,3 +1,3 @@
-function run(input) {
-  JSON.parse(input);
+function calc() {
+  eval("2 + 2");
 }
