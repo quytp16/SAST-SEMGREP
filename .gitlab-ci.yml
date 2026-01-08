@@ -1,0 +1,11 @@
+stages:
+  - test
+
+semgrep_sast:
+  stage: test
+  image: semgrep/semgrep
+  script:
+    - semgrep scan --config auto --error .
+  rules:
+    - if: $CI_MERGE_REQUEST_IID
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
