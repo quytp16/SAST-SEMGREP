@@ -14,6 +14,7 @@ jobs:
 
       - name: Run Semgrep scan
         uses: semgrep/semgrep-action@v1
+        continue-on-error: true
         with:
           entryPoint: semgrep
           config: .semgrep_rule.yml
@@ -21,7 +22,6 @@ jobs:
             scan
             --json --output findings.json
             --sarif --output semgrep.sarif
-            --exit-code 0
 
       - name: Upload JSON findings
         uses: actions/upload-artifact@v4
