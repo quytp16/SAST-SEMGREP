@@ -12,16 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run Semgrep scan
-        uses: semgrep/semgrep-action@v1
-        continue-on-error: true
-        with:
-          entryPoint: semgrep
-          args: >
-            scan
-            --config .semgrep_rule.yml
-            .
-            --sarif --output semgrep.sarif
+      - name: Run Semgrep with local rules
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            -w /src \
+            semgrep/semgrep \
+            semgrep scan \
+              --config .semgrep_rule.yml \
+              . \
+              --sarif --output semgrep.sarif
 
       - name: Upload SARIF report
         uses: actions/upload-artifact@v4
