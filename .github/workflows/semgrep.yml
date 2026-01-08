@@ -1,0 +1,36 @@
+name: Semgrep SAST Scan
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) checkout code
+      - uses: actions/checkout@v4
+
+      # 2) run semgrep
+      - name: Run Semgrep scan
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: .semgrep_rule.yml
+          output: findings.json
+          generateSarif: true
+
+      # 3) upload JSON report
+      - name: Upload JSON findings
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-findings
+          path: findings.json
+
+      # 4) upload SARIF report
+      - name: Upload SARIF report
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-sarif
+          path: semgrep.sarif
