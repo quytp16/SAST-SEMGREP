@@ -17,10 +17,10 @@ jobs:
         continue-on-error: true
         with:
           entryPoint: semgrep
-          config: .semgrep_rule.yml
           args: >
             scan
-            --json --output findings.json
+            --config .semgrep_rule.yml
+            .
             --sarif --output semgrep.sarif
 
       - name: Upload SARIF report
