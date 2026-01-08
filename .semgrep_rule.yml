@@ -1,10 +1,35 @@
 rules:
-  - id: js-avoid-eval
-    pattern: eval(...)
-    message: "Tránh dùng eval(): dễ dẫn tới code injection."
-    languages: [javascript, typescript]
+  - id: js-avoid-eval-user-input
+    message: >
+      Tránh dùng eval() với dữ liệu động hoặc dữ liệu từ người dùng.
+      Điều này có thể dẫn tới code injection (CWE-95).
     severity: ERROR
+    languages: [javascript, typescript]
+
+    patterns:
+      # Sink nguy hiểm
+      - pattern: eval($X)
+
+      # Loại trừ eval với hằng số (ít nguy hiểm)
+      - pattern-not: eval("...")
+
+      # Chỉ bắt khi $X là dữ liệu động / user input
+      - metavariable-regex:
+          metavariable: $X
+          regex: (?i)(req\.|request\.|input|data|body|query|params)
+
+    fix: |
+      // Gợi ý thay thế eval():
+      // 1. Dùng JSON.parse nếu parse dữ liệu
+      // 2. Dùng hàm xử lý logic cụ thể
+      JSON.parse($X)
+
     metadata:
       category: security
-      cwe: "CWE-95"
-      owasp: "A03:2021-Injection"
+      cwe: CWE-95
+      owasp: A03:2021-Injection
+      confidence: high
+      impact: high
+      likelihood: high
+      references:
+        - https://owasp.org/www-community/attacks/Code_Injection
