@@ -23,12 +23,6 @@ jobs:
             --json --output findings.json
             --sarif --output semgrep.sarif
 
-      - name: Upload JSON findings
-        uses: actions/upload-artifact@v4
-        with:
-          name: semgrep-findings
-          path: findings.json
-
       - name: Upload SARIF report
         uses: actions/upload-artifact@v4
         with:
