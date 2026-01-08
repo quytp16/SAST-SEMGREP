@@ -1,0 +1,31 @@
+name: Semgrep SAST (SARIF)
+
+on:
+  pull_request: {}
+  push:
+    branches: ["main", "master"]
+  workflow_dispatch: {}
+
+permissions:
+  security-events: write
+  contents: read
+  actions: read
+
+jobs:
+  semgrep:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Chạy semgrep, xuất SARIF, đồng thời gate (exit 1 nếu có finding)
+      - name: Run Semgrep and generate SARIF
+        run: semgrep scan --config auto --sarif --error > semgrep.sarif
+
+      - name: Upload SARIF to GitHub Code Scanning
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
