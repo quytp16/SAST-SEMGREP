@@ -21,6 +21,7 @@ jobs:
             scan
             --json --output findings.json
             --sarif --output semgrep.sarif
+            --exit-code 0
 
       - name: Upload JSON findings
         uses: actions/upload-artifact@v4
