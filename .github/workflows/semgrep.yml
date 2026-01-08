@@ -17,6 +17,7 @@ jobs:
         with:
           config: .semgrep_rule.yml
           args: >
+            scan
             --json --output findings.json
             --sarif --output semgrep.sarif
 
